@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.shared.db import get_session
-from app.survillance.infrastructure.domain_infrastructure import UsuarioRepository
+from app.survillance.infrastructure.repositories import UsuarioRepository
 from app.survillance.application.services import AuthService
 from app.survillance.application.dto import *
 

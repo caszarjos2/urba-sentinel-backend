@@ -8,7 +8,7 @@ from sqlalchemy import select, delete as sql_delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Importar modelos ORM
-from app.survillance.domain.entities import (
+from app.survillance.models import (
     Oficina as OficinaORM,
     Conexion as ConexionORM,
     Clip as ClipORM,

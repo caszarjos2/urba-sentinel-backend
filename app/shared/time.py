@@ -4,6 +4,18 @@ Utilidades para manejo de tiempo UTC.
 from datetime import datetime, timezone
 from typing import Optional
 
+def _as_dt_utc(x: Optional[object]) -> Optional[datetime]:
+    if x is None:
+        return None
+    # Si ya es datetime, asegúrate de que tenga tz
+    if isinstance(x, datetime):
+        return x if x.tzinfo else x.replace(tzinfo=timezone.utc)
+    # Si es value object con .value adentro
+    v = getattr(x, "value", x)
+    if isinstance(v, datetime):
+        return v if v.tzinfo else v.replace(tzinfo=timezone.utc)
+    # Si llega cualquier otra cosa, es un bug aguas arriba
+    raise TypeError(f"No puedo convertir {type(x)} a datetime")
 
 def now_utc() -> datetime:
     """Retorna el datetime actual en UTC timezone-aware"""

@@ -2,28 +2,28 @@
 Entidad de dominio: Usuario (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Any
 import re
+from datetime import datetime
 
 from ..value_objects.identifiers import IdUsuario
 from ..value_objects.timestamps import UtcDatetime
 
-
-@dataclass(frozen=True)
+@dataclass
 class Usuario:
     """
     Entidad de dominio que representa un usuario del sistema.
     Inmutable para garantizar consistencia.
     """
-    id: IdUsuario
     nombre: str
     apellido: Optional[str]
     email: str
     password_hash: str
     rol: Optional[str]
-    fecha_creacion: Optional[UtcDatetime]
-    ultimo_login: Optional[UtcDatetime]
-    
+    fecha_creacion: Optional[datetime]
+    id: Optional[IdUsuario] = None
+    ultimo_login: Optional[datetime] = None
+
     def __post_init__(self):
         """Validaciones de dominio"""
         if not self.nombre or not self.nombre.strip():

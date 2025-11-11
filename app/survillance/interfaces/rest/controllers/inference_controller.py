@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.shared.db import get_session
-from app.survillance.infrastructure.domain_infrastructure import (
+from app.survillance.infrastructure.repositories import (
     EventoRepository,
     ClipRepository,
     InferenceRequestRepository

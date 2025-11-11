@@ -8,13 +8,13 @@ from ..value_objects.identifiers import IdReporte, IdUsuario, IdClip
 from ..value_objects.timestamps import UtcDatetime
 
 
-@dataclass(frozen=True)
+@dataclass
 class Reporte:
     """
     Entidad de dominio que representa un reporte generado por usuario.
     Inmutable para garantizar consistencia.
     """
-    id: IdReporte
+    id: Optional[IdReporte] = None
     id_usuario: IdUsuario
     id_clip: IdClip
     titulo: str

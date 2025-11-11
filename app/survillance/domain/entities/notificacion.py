@@ -9,13 +9,13 @@ from ..value_objects.timestamps import UtcDatetime
 from ..enums import EstadoNotificacion
 
 
-@dataclass(frozen=True)
+@dataclass
 class Notificacion:
     """
     Entidad de dominio que representa una notificación de evento.
     Inmutable para garantizar consistencia.
     """
-    id: IdNotificacion
+    id: Optional[IdNotificacion] = None
     id_evento: IdEvento
     canal: str
     destinatario: str

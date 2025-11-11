@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.shared.db import get_session
 from app.shared.security import get_current_user_id
-from app.survillance.infrastructure.domain_infrastructure import ClipRepository
+from app.survillance.infrastructure.repositories import ClipRepository
 from app.survillance.application.services import ClipService
 from app.survillance.application.dto import ClipResponse
 

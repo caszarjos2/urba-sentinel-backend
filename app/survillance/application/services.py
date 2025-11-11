@@ -32,39 +32,33 @@ class AuthService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email ya registrado"
             )
-        
-        usuario = Usuario(
+        userEntity = Usuario(
             nombre=data.nombre,
             apellido=data.apellido,
             email=data.email,
             password_hash=hash_password(data.password),
             rol=data.rol,
-            fecha_creacion=now_utc()
+            fecha_creacion=now_utc(),
+        )
+        usuario = await self.user_repo.create(
+            userEntity
         )
         
-        return await self.user_repo.create(usuario)
+        return usuario
     
     async def login(self, data: LoginRequest) -> TokenResponse:
-        """Autentica usuario y retorna JWT"""
         usuario = await self.user_repo.get_by_email(data.email)
-        
         if not usuario or not verify_password(data.password, usuario.password_hash):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Credenciales inválidas"
-            )
-        
-        # Actualizar último login
+            raise HTTPException(status_code=401, detail="Credenciales inválidas")
+
+        # VO UtcDatetime en la entidad:
         usuario.ultimo_login = now_utc()
         await self.user_repo.update(usuario)
-        
-        # Crear token
-        token = create_access_token({"sub": usuario.id_usuario})
-        
-        return TokenResponse(
-            access_token=token,
-            expires_in=settings.JWT_EXPIRES_MIN * 60
-        )
+
+        # Usa el id de dominio
+        token = create_access_token({"sub": str(usuario.id)})
+
+        return TokenResponse(access_token=token, expires_in=settings.JWT_EXPIRES_MIN * 6000)
     
     async def refresh(self, data: RefreshRequest) -> TokenResponse:
         """Refresca un token JWT (simplificado)"""
@@ -72,7 +66,7 @@ class AuthService:
         token = create_access_token({"sub": 1})
         return TokenResponse(
             access_token=token,
-            expires_in=settings.JWT_EXPIRES_MIN * 60
+            expires_in=settings.JWT_EXPIRES_MIN * 6000
         )
 
 

@@ -1,7 +1,7 @@
 import asyncio
 from typing import Dict
 from app.shared.db import AsyncSessionLocal
-from app.survillance.infrastructure.domain_infrastructure import ConexionRepository
+from app.survillance.infrastructure.repositories import ConexionRepository
 from app.survillance.ingestion.camera_worker import CameraWorker
 
 class CameraSupervisor:

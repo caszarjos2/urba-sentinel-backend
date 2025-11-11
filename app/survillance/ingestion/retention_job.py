@@ -5,7 +5,7 @@ import asyncio
 from typing import Optional
 
 from app.shared.db import AsyncSessionLocal
-from app.survillance.infrastructure.domain_infrastructure import (
+from app.survillance.infrastructure.repositories import (
     ConexionRepository,
     ClipRepository
 )

@@ -14,7 +14,7 @@ from app.config.settings import settings
 from app.shared.db import AsyncSessionLocal
 from app.shared.time import filename_to_utc, now_utc
 from app.survillance.domain.entities import Clip, Conexion
-from app.survillance.infrastructure.domain_infrastructure import ClipRepository
+from app.survillance.infrastructure.repositories import ClipRepository
 
 
 class VideoFileHandler(FileSystemEventHandler):

@@ -8,13 +8,13 @@ from ..value_objects.identifiers import IdOficina
 from ..value_objects.timestamps import UtcDatetime
 
 
-@dataclass(frozen=True)
+@dataclass
 class Oficina:
     """
     Entidad de dominio que representa una oficina física.
     Inmutable para garantizar consistencia.
     """
-    id: IdOficina
+    id: Optional[IdOficina] = None
     nombre_oficina: str
     direccion: Optional[str]
     ciudad: Optional[str]

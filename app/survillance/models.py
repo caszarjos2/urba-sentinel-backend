@@ -128,7 +128,6 @@ class Usuario(Base):
         back_populates="usuario"
     )
 
-
 class Evento(Base):
     """Evento de seguridad detectado por IA"""
     __tablename__ = "eventos"

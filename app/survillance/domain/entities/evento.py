@@ -10,13 +10,13 @@ from ..value_objects.media_paths import SubclipPath
 from ..enums import TipoEvento
 
 
-@dataclass(frozen=True)
+@dataclass
 class Evento:
     """
     Entidad de dominio que representa un evento de seguridad detectado.
     Inmutable para garantizar consistencia.
     """
-    id: IdEvento
+    id: Optional[IdEvento] = None
     id_conexion: IdConexion
     id_clip: Optional[IdClip]
     id_usuario: Optional[IdUsuario]

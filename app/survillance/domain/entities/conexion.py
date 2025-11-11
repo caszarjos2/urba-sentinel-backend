@@ -9,13 +9,13 @@ from ..value_objects.timestamps import UtcDatetime
 from ..enums import ModoIngesta
 
 
-@dataclass(frozen=True)
+@dataclass
 class Conexion:
     """
     Entidad de dominio que representa una cámara RTSP.
     Inmutable para garantizar consistencia.
     """
-    id: IdConexion
+    id: Optional[IdConexion] = None
     id_oficina: IdOficina
     nombre_camara: str
     ubicacion: Optional[str]

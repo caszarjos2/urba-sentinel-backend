@@ -26,6 +26,7 @@ from .entities.evento import Evento
 from .entities.notificacion import Notificacion
 from .entities.reporte import Reporte
 from .entities.inference_request import InferenceRequest
+from ...shared.time import _as_dt_utc
 
 # Importar value objects
 from .value_objects.identifiers import (
@@ -164,16 +165,15 @@ def usuario_to_orm(entity: Usuario, existing: Optional[UsuarioORM] = None) -> Us
     """Convierte entidad de dominio a modelo ORM"""
     orm = existing or UsuarioORM()
     
-    orm.id_usuario = int(entity.id)
     orm.nombre = entity.nombre
     orm.apellido = entity.apellido
     orm.email = entity.email
     orm.password_hash = entity.password_hash
     orm.rol = entity.rol
     if entity.fecha_creacion:
-        orm.fecha_creacion = entity.fecha_creacion.to_datetime()
+        orm.fecha_creacion = _as_dt_utc(entity.fecha_creacion)
     if entity.ultimo_login:
-        orm.ultimo_login = entity.ultimo_login.to_datetime()
+        orm.ultimo_login = _as_dt_utc(entity.ultimo_login)
     
     return orm
 

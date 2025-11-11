@@ -14,7 +14,7 @@ class RegisterRequest(BaseModel):
     nombre: str = Field(..., max_length=100)
     apellido: Optional[str] = Field(None, max_length=100)
     email: EmailStr
-    password: str = Field(..., min_length=6)
+    password: str = Field(..., min_length=2)
     rol: Optional[str] = Field(None, max_length=60)
 
 

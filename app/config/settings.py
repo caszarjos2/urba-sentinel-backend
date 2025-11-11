@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     # JWT
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
-    JWT_EXPIRES_MIN: int = 60
+    JWT_EXPIRES_MIN: int = 6000
 
     # FFmpeg
     FFMPEG_PATH: str = "ffmpeg"

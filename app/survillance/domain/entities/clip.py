@@ -9,13 +9,13 @@ from ..value_objects.timestamps import UtcDatetime, DurationSeconds
 from ..value_objects.media_paths import StoragePath
 
 
-@dataclass(frozen=True)
+@dataclass
 class Clip:
     """
     Entidad de dominio que representa un clip de video segmentado.
     Inmutable para garantizar consistencia.
     """
-    id: IdClip
+    id: Optional[IdClip] = None
     id_conexion: IdConexion
     storage_path: StoragePath
     start_time_utc: UtcDatetime
