@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.shared.db import get_session
 from app.shared.security import get_current_user_id
 from app.survillance.infrastructure.repositories import NotificacionRepository
-from app.survillance.application.services import NotificacionService
+from app.survillance.application.services.notificacion_service import NotificacionService
 from app.survillance.application.dto import *
 
 

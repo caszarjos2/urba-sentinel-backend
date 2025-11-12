@@ -35,7 +35,8 @@ class ClipResolver:
         
         for clip in clips:
             clip_start = clip.start_time_utc
-            clip_end = clip_start + timedelta(seconds=clip.duration_sec)
+            duration_sec = int(clip.duration_sec)  # Convertir DurationSeconds VO a int
+            clip_end = clip_start + timedelta(seconds=duration_sec)
             
             # Si el clip no intersecta el rango, skip
             if clip_end <= start_time_abs or clip_start >= end_time_abs:
@@ -53,7 +54,7 @@ class ClipResolver:
             # Calcular duración a cortar
             if end_time_abs >= clip_end:
                 # El rango cubre hasta el final del clip o más
-                dur = clip.duration_sec - ss
+                dur = duration_sec - ss
             else:
                 # El rango termina dentro del clip
                 delta_end = (end_time_abs - clip_start).total_seconds()
@@ -62,7 +63,9 @@ class ClipResolver:
             # Asegurar que dur sea positiva
             dur = max(0.1, dur)
             
-            result.append((clip.storage_path, ss, dur))
+            # Convertir storage_path a string si es StoragePath VO
+            storage_path_str = str(clip.storage_path)
+            result.append((storage_path_str, ss, dur))
         
         return result
     

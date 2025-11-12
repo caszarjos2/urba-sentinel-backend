@@ -3,24 +3,21 @@ Entidad de dominio: Oficina (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
 from typing import Optional
-
-from ..value_objects.identifiers import IdOficina
-from ..value_objects.timestamps import UtcDatetime
+from datetime import datetime
 
 
 @dataclass
 class Oficina:
     """
     Entidad de dominio que representa una oficina física.
-    Inmutable para garantizar consistencia.
     """
-    id: Optional[IdOficina] = None
     nombre_oficina: str
-    direccion: Optional[str]
-    ciudad: Optional[str]
-    responsable: Optional[str]
-    telefono_contacto: Optional[str]
-    fecha_registro: Optional[UtcDatetime]
+    direccion: Optional[str] = None
+    ciudad: Optional[str] = None
+    responsable: Optional[str] = None
+    telefono_contacto: Optional[str] = None
+    fecha_registro: Optional[datetime] = None
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""

@@ -3,9 +3,8 @@ Entidad de dominio: Conexión/Cámara (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
-from ..value_objects.identifiers import IdConexion, IdOficina
-from ..value_objects.timestamps import UtcDatetime
 from ..enums import ModoIngesta
 
 
@@ -13,21 +12,20 @@ from ..enums import ModoIngesta
 class Conexion:
     """
     Entidad de dominio que representa una cámara RTSP.
-    Inmutable para garantizar consistencia.
     """
-    id: Optional[IdConexion] = None
-    id_oficina: IdOficina
+    id_oficina: int
     nombre_camara: str
-    ubicacion: Optional[str]
     rtsp_url: str
-    estado: Optional[str]
-    ultimo_ping: Optional[UtcDatetime]
     modo_ingesta: ModoIngesta
-    fps_sample: Optional[int]
     habilitada: bool
     retention_minutes: int
-    created_at: Optional[UtcDatetime]
-    updated_at: Optional[UtcDatetime]
+    ubicacion: Optional[str] = None
+    estado: Optional[str] = None
+    ultimo_ping: Optional[datetime] = None
+    fps_sample: Optional[int] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""

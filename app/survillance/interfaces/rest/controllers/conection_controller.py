@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.shared.db import get_session
 from app.shared.security import get_current_user_id
 from app.survillance.infrastructure.repositories import ConexionRepository
-from app.survillance.application.services import ConexionService
+from app.survillance.application.services.conexion_service import ConexionService
 from app.survillance.application.dto import *
 
 

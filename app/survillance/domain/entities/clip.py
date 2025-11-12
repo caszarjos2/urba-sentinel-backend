@@ -3,9 +3,9 @@ Entidad de dominio: Clip (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime, timedelta
 
-from ..value_objects.identifiers import IdClip, IdConexion
-from ..value_objects.timestamps import UtcDatetime, DurationSeconds
+from ..value_objects.timestamps import DurationSeconds
 from ..value_objects.media_paths import StoragePath
 
 
@@ -13,27 +13,24 @@ from ..value_objects.media_paths import StoragePath
 class Clip:
     """
     Entidad de dominio que representa un clip de video segmentado.
-    Inmutable para garantizar consistencia.
     """
-    id: Optional[IdClip] = None
-    id_conexion: IdConexion
+    id_conexion: int
     storage_path: StoragePath
-    start_time_utc: UtcDatetime
+    start_time_utc: datetime
     duration_sec: DurationSeconds
-    fecha_guardado: Optional[UtcDatetime]
+    fecha_guardado: Optional[datetime] = None
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""
         # StoragePath y DurationSeconds ya validan en sus constructores
         pass
     
-    def end_time_utc(self) -> UtcDatetime:
+    def end_time_utc(self) -> datetime:
         """Calcula el tiempo final del clip"""
-        from datetime import timedelta
-        end = self.start_time_utc.value + timedelta(seconds=int(self.duration_sec))
-        return UtcDatetime(end)
+        end = self.start_time_utc + timedelta(seconds=int(self.duration_sec))
+        return end
     
-    def contains_timestamp(self, timestamp: UtcDatetime) -> bool:
+    def contains_timestamp(self, timestamp: datetime) -> bool:
         """Verifica si un timestamp está dentro del clip"""
-        return (self.start_time_utc.value <= timestamp.value < 
-                self.end_time_utc().value)
+        return (self.start_time_utc <= timestamp < self.end_time_utc())

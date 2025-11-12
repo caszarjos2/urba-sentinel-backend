@@ -4,22 +4,20 @@ Entidad de dominio: EventSnapshot (snapshot/frame de un evento).
 from dataclasses import dataclass
 from typing import Optional
 
-from ..value_objects.identifiers import IdEventSnapshot, IdEvento
 from ..value_objects.timestamps import MilliSeconds
 from ..value_objects.media_paths import SnapshotPath
 
 
-@dataclass(frozen=True)
+@dataclass
 class EventSnapshot:
     """
     Entidad de dominio que representa un snapshot (imagen) de un evento.
     Captura un frame específico del video en el momento del evento.
-    Inmutable para garantizar consistencia.
     """
-    id: IdEventSnapshot
-    id_evento: IdEvento
+    id_evento: int
     ruta_imagen: SnapshotPath
     timestamp_rel_ms: MilliSeconds
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""

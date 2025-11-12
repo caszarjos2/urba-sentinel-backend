@@ -1,13 +1,16 @@
-# security.py
+# app/shared/security.py
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from jose import jwt, JWTError, ExpiredSignatureError
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from app.config.settings import settings
+
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
+security_scheme = HTTPBearer(auto_error=True)
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -15,14 +18,15 @@ def hash_password(password: str) -> str:
 def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
-pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
-security_scheme = HTTPBearer()
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(subject: str | int, minutes: Optional[int] = None) -> str:
     now = datetime.now(timezone.utc)
-    exp = now + (expires_delta or timedelta(minutes=settings.JWT_EXPIRES_MIN))
-    to_encode = {"iat": int(now.timestamp()), "exp": int(exp.timestamp()), **data}
-    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    exp = now + timedelta(minutes=minutes or settings.JWT_EXPIRES_MIN)
+    payload = {
+        "sub": str(subject),
+        "iat": int(now.timestamp()),
+        "exp": int(exp.timestamp()),
+    }
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 def decode_token(token: str) -> dict:
     try:
@@ -30,12 +34,13 @@ def decode_token(token: str) -> dict:
             token,
             settings.JWT_SECRET,
             algorithms=[settings.JWT_ALGORITHM],
-            options={"verify_aud": False, "leeway": 10},  # ← leeway va en options
+            options={"verify_aud": False},
         )
     except ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="El token expiró")
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido o expirado")
+        raise HTTPException(status_code=401, detail="Token expirado")
+    except JWTError as e:
+        # Log de diagnóstico (no exponer al cliente)
+        raise HTTPException(status_code=401, detail="Token inválido o expirado")
 
 async def get_current_user_id(
     credentials: HTTPAuthorizationCredentials = Depends(security_scheme),
@@ -44,4 +49,7 @@ async def get_current_user_id(
     sub = payload.get("sub")
     if sub is None:
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
-    return int(sub)
+    try:
+        return int(sub)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")

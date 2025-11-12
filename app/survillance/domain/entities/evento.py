@@ -3,9 +3,9 @@ Entidad de dominio: Evento (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
-from ..value_objects.identifiers import IdEvento, IdConexion, IdClip, IdUsuario
-from ..value_objects.timestamps import UtcDatetime, DurationSeconds, MilliSeconds
+from ..value_objects.timestamps import DurationSeconds, MilliSeconds
 from ..value_objects.media_paths import SubclipPath
 from ..enums import TipoEvento
 
@@ -14,20 +14,19 @@ from ..enums import TipoEvento
 class Evento:
     """
     Entidad de dominio que representa un evento de seguridad detectado.
-    Inmutable para garantizar consistencia.
     """
-    id: Optional[IdEvento] = None
-    id_conexion: IdConexion
-    id_clip: Optional[IdClip]
-    id_usuario: Optional[IdUsuario]
+    id_conexion: int
     tipo_evento: TipoEvento
-    confianza: Optional[float]
     t_inicio_ms: MilliSeconds
     t_fin_ms: MilliSeconds
-    timestamp_evento: UtcDatetime
+    timestamp_evento: datetime
     procesado: bool
-    subclip_path: Optional[SubclipPath]
-    subclip_duracion_sec: Optional[DurationSeconds]
+    id_clip: Optional[int] = None
+    id_usuario: Optional[int] = None
+    confianza: Optional[float] = None
+    subclip_path: Optional[SubclipPath] = None
+    subclip_duracion_sec: Optional[DurationSeconds] = None
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""

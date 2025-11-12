@@ -8,7 +8,10 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from app.shared.db import engine, Base
-from app.survillance import models
+# Importar modelos para que SQLAlchemy los registre
+from app.survillance.models import (
+    Oficina, Conexion, Clip, Usuario, Evento, Notificacion, Reporte, InferenceRequest
+)
 
 from app.config.settings import settings
 from app.survillance.ingestion.camera_supervisor import camera_supervisor
@@ -40,12 +43,17 @@ async def lifespan(app: FastAPI):
     os.makedirs(os.path.join(settings.STORAGE_BASE_PATH, "events"), exist_ok=True)
     os.makedirs(os.path.join(settings.STORAGE_BASE_PATH, "temp"), exist_ok=True)
     
-    # Iniciar job de retención
+    # Crear tablas solo en desarrollo
+    from app.config.settings import APP_ENV
+    if APP_ENV == "development":
+        print("Modo desarrollo: creando tablas...")
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        print("Tablas creadas correctamente")
+    else:
+        print(f"Modo {APP_ENV}: usando migraciones de Alembic")
     
     print("Aplicación iniciada correctamente")
-    
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
 
     yield
     
@@ -66,7 +74,9 @@ app = FastAPI(
     title="Sistema de Seguridad y Vigilancia",
     description="Backend para gestión de cámaras RTSP, eventos de IA y buffer de clips",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/docs",
+    openapi_url="/openapi.json"
 )
 
 

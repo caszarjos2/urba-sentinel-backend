@@ -2,21 +2,19 @@
 Entidad de dominio: InferenceRequest (control de idempotencia de webhooks).
 """
 from dataclasses import dataclass
+from typing import Optional
+from datetime import datetime
 
-from ..value_objects.identifiers import IdInferenceRequest
-from ..value_objects.timestamps import UtcDatetime
 
-
-@dataclass(frozen=True)
+@dataclass
 class InferenceRequest:
     """
     Entidad de dominio para control de idempotencia de webhooks de inferencia.
     Garantiza que un request_id solo se procese una vez.
-    Inmutable para garantizar consistencia.
     """
-    id: IdInferenceRequest
     request_id: str
-    received_at: UtcDatetime
+    received_at: datetime
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""

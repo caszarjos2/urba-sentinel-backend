@@ -3,9 +3,8 @@ Entidad de dominio: Notificación (sin dependencias de infraestructura).
 """
 from dataclasses import dataclass
 from typing import Optional
+from datetime import datetime
 
-from ..value_objects.identifiers import IdNotificacion, IdEvento
-from ..value_objects.timestamps import UtcDatetime
 from ..enums import EstadoNotificacion
 
 
@@ -13,14 +12,13 @@ from ..enums import EstadoNotificacion
 class Notificacion:
     """
     Entidad de dominio que representa una notificación de evento.
-    Inmutable para garantizar consistencia.
     """
-    id: Optional[IdNotificacion] = None
-    id_evento: IdEvento
+    id_evento: int
     canal: str
     destinatario: str
     estado: EstadoNotificacion
-    fecha_envio: Optional[UtcDatetime]
+    fecha_envio: Optional[datetime] = None
+    id: Optional[int] = None
     
     def __post_init__(self):
         """Validaciones de dominio"""
